@@ -19,14 +19,14 @@ def main():
 	lista = os.listdir(sys.argv[2])
 	for arch in lista:
 		print("Procesando:", arch)
-		rutacompdav = os.path.join(sys.argv[2], arch)
-		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
+		ruta_dav_recibido = os.path.join(sys.argv[2], arch)
+		# ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 				
-		arch_lock = rutacompdav + ".lock"
-		arch_done = rutacompdav + ".done"
+		arch_lock = arch + ".lock"
+		arch_done = arch + ".done"
 		if arch_lock in lista or arch_done in lista:
 			continue
-		
+				
 		lock_file = open(arch_lock, 'w')
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
@@ -36,7 +36,7 @@ def main():
 		done_file = open(arch_done, 'w')
 		done_file.write("")
 		done_file.close()
-		# remove lock file
+		
 		os.remove(lock_file)
 
 		shutil.move(rutacompdav, ruta_dav_procesado)
