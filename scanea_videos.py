@@ -20,29 +20,29 @@ def main():
 	for arch in lista:
 		print("Procesando:", arch)
 		ruta_dav_recibido = os.path.join(sys.argv[2], arch)
-		# ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 				
 		arch_lock = arch + ".lock"
 		arch_done = arch + ".done"
 		if arch_lock in lista or arch_done in lista:
 			continue
 				
-		lock_file = open(arch_lock, 'w')
+		lock_file = open(ruta_dav_recibido + ".lock", "w+")
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
 		archsalida = str(arch) + ".log"
-		fn("scanpatvid", sys.argv[1], rutacompdav, archsalida)
-		lock_file.close()
-		done_file = open(arch_done, 'w')
+		fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
+		
+		done_file = open(ruta_dav_recibido + ".done", 'w')
 		done_file.write("")
 		done_file.close()
 		
+		lock_file.close()
 		os.remove(lock_file)
 
-		shutil.move(rutacompdav, ruta_dav_procesado)
-		shutil.move(arch_done, ruta_dav_procesado + ".done")
-		# register the dav file processed: archsalida ya tiene ese registro, es un archivo.log, en qué debería cambiar?
-
+		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
+		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
+		shutil.move(ruta_dav_recibido, ruta_dav_procesado)
+		
 		time.sleep(2)
 		lista = os.listdir(sys.argv[2])
 
