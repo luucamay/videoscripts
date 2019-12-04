@@ -18,9 +18,9 @@ def main():
 		return
 	lista = os.listdir(sys.argv[2])
 	for arch in lista:
-		if ".dav" in arch or ".lock" in arch:
+		if ".done" in arch or ".lock" in arch:
 			continue
-			
+
 		print("Procesando:", arch)
 		ruta_dav_recibido = os.path.join(sys.argv[2], arch)
 				
