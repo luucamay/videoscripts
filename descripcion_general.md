@@ -2,8 +2,8 @@
 
 1. Del directorio **/recibido** toma un archivo.dav
 2. Verifica si está siendo procesado (.lock) o ya ha sido procesado (.done)
-  1. los archivos .lock estoy asumiendo que estarán en el mismo directorio de /recibido, o prefieres que estén en el servidor desde donde se procesa, lo cuál no creo que sea conveniente porque los otros servidores procesadores no sabrían dónde buscar el .lock file
-  2. la misma pregunta para los archivos .done estos se encuentran en el mismo directorio de /recibido, pero luego se mueven junto con los archivos .dav al directorio /procesado
+    1. los archivos .lock estoy asumiendo que estarán en el mismo directorio de /recibido, o prefieres que estén en el servidor desde donde se procesa, lo cuál no creo que sea conveniente porque los otros servidores procesadores no sabrían dónde buscar el .lock file
+    2. la misma pregunta para los archivos .done estos se encuentran en el mismo directorio de /recibido, pero luego se mueven junto con los archivos .dav al directorio /procesado
 3. Si no se cumplen las condiciones del paso 2, empezamos a procesar este archivo.dav
 4. Se crea el archivo.lock en el directorio /recibido
 5. Procesa el archivo.dav con scanpatvid
