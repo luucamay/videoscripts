@@ -8,8 +8,11 @@ import fcntl
 
 def fn(comando, dirpat, archdav, archsalida):
 	salida = subprocess.check_output([comando, dirpat, archdav])
-	with open(archsalida, "w") as arch:
-		arch.write(salida.decode())
+	try:
+		with open(archsalida, "w") as arch:
+			arch.write(salida.decode())
+	except IOError as e:
+			print("No se pudo abrir o escribir archivo  (%s)." % e)
 
 def main():
 	if len(sys.argv) != 3:
@@ -31,25 +34,33 @@ def main():
 		arch_done = arch + ".done"
 		if arch_lock in lista or arch_done in lista:
 			continue
-				
+
 		lock_file = open(ruta_dav_recibido + ".lock", "w+")
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+		
 
 		archsalida = str(arch) + ".log"
 		fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
 		
-		done_file = open(ruta_dav_recibido + ".done", 'w')
-		done_file.write("")
-		done_file.close()
+		try:
+			with open(ruta_dav_recibido + ".done", 'w') as done_file:
+				done_file.write("")
+				done_file.close()
+		except IOError as e:
+			print("No se pudo abrir o escribir archivo (%s)." % e)
 		
 		lock_file.close()
-		os.remove(lock_file)
+		try:
+			os.remove(lock_file)
+    	except:
+        	print("Error al eliminar el lock_file ", lock_file)
 
 		try:
 			os.makedirs(sys.argv[3])
 		except FileExistsError:
 			pass
 		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
+		
 		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
 		shutil.move(ruta_dav_recibido, ruta_dav_procesado)
 		
