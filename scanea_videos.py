@@ -48,7 +48,7 @@ def main():
 		try:
 			os.makedirs(sys.argv[3])
 		except FileExistsError:
-			print("Moviendo video al directorio de procesados")
+			pass
 		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
 		shutil.move(ruta_dav_recibido, ruta_dav_procesado)
