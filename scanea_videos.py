@@ -17,6 +17,9 @@ def main():
 		print(sys.argv[0], " DIR_PATRONES DIR_VIDEOS_DAV DIR_VIDEOS_PROCESADOS")
 		return
 	lista = os.listdir(sys.argv[2])
+	if not lista:
+		print("No hay archivos en el directorio")
+
 	for arch in lista:
 		if ".done" in arch or ".lock" in arch:
 			continue
@@ -42,6 +45,10 @@ def main():
 		lock_file.close()
 		os.remove(lock_file)
 
+		try:
+			os.makedirs(sys.argv[3])
+		except FileExistsError:
+			print("Moviendo video al directorio de procesados")
 		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
 		shutil.move(ruta_dav_recibido, ruta_dav_procesado)
