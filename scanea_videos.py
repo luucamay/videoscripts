@@ -17,7 +17,7 @@ def fn(comando, dirpat, archdav, archsalida):
 def main():
 	if len(sys.argv) != 4:
 		print("Modo de empleo:")
-		print(sys.argv[0], " DIR_PATRONES DIR_VIDEOS_DAV DIR_VIDEOS_PROCESADOS")
+		print(sys.argv[0] + " DIR_PATRONES DIR_VIDEOS_DAV DIR_VIDEOS_PROCESADOS")
 		return
 	lista = os.listdir(sys.argv[2])
 	if not lista:
