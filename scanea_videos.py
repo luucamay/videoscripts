@@ -53,7 +53,7 @@ def main():
 		try:
 			os.remove(lock_file)
 		except:
-        	print("Error al eliminar el lock_file ", lock_file)
+			print("Error al eliminar el lock_file ", lock_file)
 
 		try:
 			os.makedirs(sys.argv[3])
