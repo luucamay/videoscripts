@@ -52,7 +52,7 @@ def main():
 		lock_file.close()
 		try:
 			os.remove(lock_file)
-    	except:
+		except:
         	print("Error al eliminar el lock_file ", lock_file)
 
 		try:
