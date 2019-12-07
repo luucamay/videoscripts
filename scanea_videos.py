@@ -24,7 +24,7 @@ def main():
 		print("No hay archivos en el directorio")
 
 	for arch in lista:
-		if ".done" in arch or ".lock" in arch:
+		if not arch.endswith(".dav"):
 			continue
 
 		print("Procesando:", arch)
