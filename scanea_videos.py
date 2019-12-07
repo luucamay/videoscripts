@@ -12,10 +12,10 @@ def fn(comando, dirpat, archdav, archsalida):
 		with open(archsalida, "w") as arch:
 			arch.write(salida.decode())
 	except IOError as e:
-			print("No se pudo abrir o escribir archivo  (%s)." % e)
+		print("No se pudo abrir o escribir archivo  (%s)." % e)
 
 def main():
-	if len(sys.argv) != 3:
+	if len(sys.argv) != 4:
 		print("Modo de empleo:")
 		print(sys.argv[0], " DIR_PATRONES DIR_VIDEOS_DAV DIR_VIDEOS_PROCESADOS")
 		return
