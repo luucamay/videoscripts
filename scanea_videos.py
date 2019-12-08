@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import time
 import fcntl
+import errno
 
 def fn(comando, dirpat, archdav, archsalida):
 	salida = subprocess.check_output([comando, dirpat, archdav])
@@ -57,8 +58,9 @@ def main():
 
 		try:
 			os.makedirs(sys.argv[3])
-		except FileExistsError:
-			pass
+		except OSError as e:
+			if e.errno != errno.EEXIST:
+				raise
 		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 		
 		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
