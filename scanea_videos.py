@@ -8,12 +8,18 @@ import fcntl
 import errno
 
 def fn(comando, dirpat, archdav, archsalida):
-	salida = subprocess.check_output([comando, dirpat, archdav])
+	errorcode = 0
+	arch = open(archsalida, "a+")
 	try:
-		with open(archsalida, "w") as arch:
-			arch.write(salida.decode())
-	except IOError as e:
-		print("No se pudo abrir o escribir archivo  (%s)." % e)
+		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=0.1)
+	except subprocess.CalledProcessError as salidaexc:
+		errorcode = salidaexc.returncode
+
+	if errorcode == 0:
+		arch.write(salida.decode())
+	arch.close()
+
+	return errorcode
 
 def main():
 	if len(sys.argv) != 4:
@@ -41,14 +47,25 @@ def main():
 		
 
 		archsalida = str(arch) + ".log"
-		fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
-		
-		try:
-			with open(ruta_dav_recibido + ".done", 'w') as done_file:
-				done_file.write("")
-				done_file.close()
-		except IOError as e:
-			print("No se pudo abrir o escribir archivo (%s)." % e)
+		procesa_video = fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
+
+		if procesa_video == 0:	
+			try:
+				with open(ruta_dav_recibido + ".done", 'w') as done_file:
+					done_file.write("")
+					done_file.close()
+			except IOError as e:
+				print("No se pudo abrir o escribir archivo (%s)." % e)
+			
+			try:
+				os.makedirs(sys.argv[3])
+			except OSError as e:
+				if e.errno != errno.EEXIST:
+					raise
+			ruta_dav_procesado = os.path.join(sys.argv[3], arch)
+			
+			shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
+			shutil.move(ruta_dav_recibido, ruta_dav_procesado)
 		
 		lock_file.close()
 		try:
@@ -56,16 +73,6 @@ def main():
 		except:
 			print("Error al eliminar el lock_file ", lock_file)
 
-		try:
-			os.makedirs(sys.argv[3])
-		except OSError as e:
-			if e.errno != errno.EEXIST:
-				raise
-		ruta_dav_procesado = os.path.join(sys.argv[3], arch)
-		
-		shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
-		shutil.move(ruta_dav_recibido, ruta_dav_procesado)
-		
 		time.sleep(2)
 		lista = os.listdir(sys.argv[2])
 
