@@ -14,9 +14,13 @@ def fn(comando, dirpat, archdav, archsalida):
 		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=0.1)
 	except subprocess.CalledProcessError as salidaexc:
 		errorcode = salidaexc.returncode
+	except subprocess.TimeoutExpired as t:
+		errorcode = 124
 
 	if errorcode == 0:
 		arch.write(salida.decode())
+	elif errorcode == 124:
+		arch.write("Tiempo agotado al procesar:", archdav)
 	arch.close()
 
 	return errorcode
@@ -45,7 +49,6 @@ def main():
 		lock_file = open(ruta_dav_recibido + ".lock", "w+")
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
 		
-
 		archsalida = str(arch) + ".log"
 		procesa_video = fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
 
