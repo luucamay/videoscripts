@@ -11,7 +11,7 @@ def fn(comando, dirpat, archdav, archsalida):
 	errorcode = 0
 	arch = open(archsalida, "a+")
 	try:
-		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=60)
+		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=600)
 	except subprocess.CalledProcessError as salidaexc:
 		errorcode = salidaexc.returncode
 	except subprocess.TimeoutExpired as t:
