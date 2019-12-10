@@ -72,9 +72,9 @@ def main():
 		
 		lock_file.close()
 		try:
-			os.remove(lock_file)
+			os.remove(ruta_dav_recibido + ".lock")
 		except:
-			print("Error al eliminar el lock_file ", lock_file)
+			print("Error al eliminar el lock_file ", ruta_dav_recibido + ".lock")
 
 		time.sleep(2)
 		lista = os.listdir(sys.argv[2])
