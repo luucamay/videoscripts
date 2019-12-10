@@ -11,7 +11,7 @@ def fn(comando, dirpat, archdav, archsalida):
 	errorcode = 0
 	arch = open(archsalida, "a+")
 	try:
-		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=600)
+		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, stdout=arch, timeout=600)
 	except subprocess.CalledProcessError as salidaexc:
 		errorcode = salidaexc.returncode
 	except subprocess.TimeoutExpired as t:
@@ -20,7 +20,7 @@ def fn(comando, dirpat, archdav, archsalida):
 	if errorcode == 0:
 		arch.write(salida.decode())
 	elif errorcode == 124:
-		arch.write("Tiempo agotado al procesar: " + archdav)
+		arch.write("Tiempo agotado al procesar: '" + archdav + "'\n")
 	arch.close()
 
 	return errorcode
