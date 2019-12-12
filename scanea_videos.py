@@ -11,7 +11,7 @@ def fn(comando, dirpat, archdav, archsalida):
 	errorcode = 0
 	arch = open(archsalida, "a+")
 	try:
-		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=600)
+		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=7200)
 	except subprocess.CalledProcessError as salidaexc:
 		errorcode = salidaexc.returncode
 	except subprocess.TimeoutExpired as t:
@@ -52,7 +52,7 @@ def main():
 		archsalida = str(arch) + ".log"
 		procesa_video = fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
 
-		if procesa_video == 0:	
+		if procesa_video == 0 or procesa_video == 124:	
 			try:
 				with open(ruta_dav_recibido + ".done", 'w') as done_file:
 					done_file.write("")
