@@ -7,11 +7,15 @@ import time
 import fcntl
 import errno
 
+videotool='/bin/true'
+videotool='scanpatvid'
+maxtime=7200
+
 def fn(comando, dirpat, archdav, archsalida):
 	errorcode = 0
 	arch = open(archsalida, "a+")
 	try:
-		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=7200)
+		salida = subprocess.check_output([comando, dirpat, archdav], stderr=arch, timeout=maxtime)
 	except subprocess.CalledProcessError as salidaexc:
 		errorcode = salidaexc.returncode
 	except subprocess.TimeoutExpired as t:
@@ -50,7 +54,7 @@ def main():
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
 		
 		archsalida = str(arch) + ".log"
-		procesa_video = fn("scanpatvid", sys.argv[1], ruta_dav_recibido, archsalida)
+		procesa_video = fn(videotool, sys.argv[1], ruta_dav_recibido, archsalida)
 
 		if procesa_video == 0 or procesa_video == 124:	
 			try:
@@ -68,6 +72,7 @@ def main():
 			ruta_dav_procesado = os.path.join(sys.argv[3], arch)
 			
 			shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
+			shutil.move(ruta_dav_recibido + ".log", ruta_dav_procesado + ".log")
 			shutil.move(ruta_dav_recibido, ruta_dav_procesado)
 		
 		lock_file.close()
