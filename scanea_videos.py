@@ -74,11 +74,11 @@ def main():
 			shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
 			shutil.move(ruta_dav_recibido + ".log", ruta_dav_procesado + ".log")
 			shutil.move(ruta_dav_recibido, ruta_dav_procesado)
-			lista = os.listdir(".")
-			for arch_png in lista:	
+			lista_png = os.listdir(".")
+			for arch_png in lista_png:	
 				if arch_png.endswith(".png"):
 					print ("Moviendo archivo png: " + arch_png)
-					ruta_png_generado = os.path.join(sys.argv[2], arch_png)
+					ruta_png_generado = os.path.join(".", arch_png)
 					ruta_png_destino = os.path.join(sys.argv[3], arch_png)
 					shutil.move(ruta_png_generado, ruta_png_destino)
 
