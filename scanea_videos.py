@@ -53,7 +53,7 @@ def main():
 		lock_file = open(ruta_dav_recibido + ".lock", "w+")
 		fcntl.lockf(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
 		
-		archsalida = str(arch) + ".log"
+		archsalida = ruta_dav_recibido + ".log"
 		procesa_video = fn(videotool, sys.argv[1], ruta_dav_recibido, archsalida)
 
 		if procesa_video == 0 or procesa_video == 124:	
