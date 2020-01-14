@@ -1,0 +1,1 @@
+create table tvmencion ( cod_mencion smallint unsigned not null auto_increment, fecha_registro, fecha_emision, cod_canal, cod_ciu, cod_rubro, cod_anunciante, cod_producto, nombre_spot, duracion, hora_emision, cod_programa, observacion, constraint pk_tvmencion primary key (cod_mencion))
