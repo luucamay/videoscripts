@@ -17,7 +17,7 @@ def procesa_log(arch):
                             log_data['duracion'] = line_array[i+2]
                             log_data['cod_rubro'] = line_array[i+3]
                             log_data['cod_producto'] = line_array[i+4]
-                            log_data['cod_anunciante'] = line_array[i+5]
+                            log_data['cod_anunciante'] = line_array[i+5].rstrip()
                     # linea procesada en log_data
                     lista_datos.append(log_data)
     except IOError:
