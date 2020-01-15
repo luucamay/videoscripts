@@ -4,6 +4,26 @@ import sys
 import datetime
 import time
 
+def format_date(str_date):
+    datetimeobj = datetime.datetime.strptime(str_date, '%Y%m%d%H%M%S')
+    date = datetimeobj.strftime('%d/%m/%Y')
+    hour = datetimeobj.strftime('%H:%M:%S')
+    return date, hour
+
+def get_obs(str_observacion):
+    obs = str_observacion.split('.')
+    obs = obs[0].split('-')
+    return obs[1]
+
+def procesa_nombre_archivo(string_name):
+    datos_nombre = {}
+    name_array = string_name.split('_')
+    datos_nombre['cod_ciu'] = name_array[0]
+    datos_nombre['cod_canal'] = name_array[1]
+    datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
+    datos_nombre['observacion'] = get_obs(name_array[3])
+    return datos_nombre
+
 def to_seconds(string_time):
     string_time = string_time[3:]
     x = time.strptime(string_time, '%H:%M:%S')
@@ -47,7 +67,10 @@ def main():
         print("Procesando: ", arch)
         arch_log = os.path.join(sys.argv[1], arch)
         datos = procesa_log(arch_log)
+        # dictionary
+        datos_name_arch = procesa_nombre_archivo(arch)
         print(datos)
+        print(datos_name_arch)
 
     # process the text inside the log file
 
