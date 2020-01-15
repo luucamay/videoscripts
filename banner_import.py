@@ -42,11 +42,10 @@ def main():
     if not lista:
         print("No hay archivos en el directorio")
     for arch in lista:
-        if not arch.endswith(".dav"):
+        if not arch.endswith(".log"):
             continue
         print("Procesando: ", arch)
-        arch_dav = os.path.join(sys.argv[1], arch)
-        arch_log = arch_dav + ".log"
+        arch_log = os.path.join(sys.argv[1], arch)
         datos = procesa_log(arch_log)
         print(datos)
 
