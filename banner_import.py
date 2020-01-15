@@ -1,6 +1,14 @@
 #!/usr/bin/python3
 import os
 import sys
+import datetime
+import time
+
+def to_seconds(string_time):
+    string_time = string_time[3:]
+    x = time.strptime(string_time, '%H:%M:%S')
+    total_sec = datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
+    return int(total_sec)
 
 def procesa_log(arch):
     lista_datos = []
@@ -14,7 +22,7 @@ def procesa_log(arch):
                     for i in range(len(line_array)):
                         if line_array[i] == 'MATCH':
                             log_data['nombre_spot'] = line_array[i+1]
-                            log_data['duracion'] = line_array[i+2]
+                            log_data['duracion'] = to_seconds(line_array[i+2])
                             log_data['cod_rubro'] = line_array[i+3]
                             log_data['cod_producto'] = line_array[i+4]
                             log_data['cod_anunciante'] = line_array[i+5].rstrip()
