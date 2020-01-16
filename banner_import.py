@@ -6,9 +6,9 @@ import time
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
-        with open(archsalida) as file:
+        with open(archsalida, 'w+') as file:
             for data in datos_from_log:
-                registro = ''
+                registro = ""
                 registro += datos_from_name['fecha_emision'] + ';'
                 registro += datos_from_name['cod_canal'] + ';'
                 registro += datos_from_name['cod_ciu'] + ';'
@@ -16,7 +16,7 @@ def create_csv(archsalida, datos_from_log, datos_from_name):
                 registro += data['cod_anunciante'] + ';'
                 registro += data['cod_producto'] + ';'
                 registro += datos_from_name['observacion'] + ';'
-                registro += data['duracion'] + ';'
+                registro += str(data['duracion']) + ';'
                 registro += datos_from_name['hora_emision'] + ';'
                 registro += data['nombre_spot'] + '\n'
                 file.write(registro)
