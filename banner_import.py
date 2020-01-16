@@ -59,13 +59,12 @@ def procesa_log(arch):
                 line_set = set(line_array)
                 if 'MATCH' in line_set:
                     log_data = {}
-                    for i in range(len(line_array)):
-                        if line_array[i] == 'MATCH':
-                            log_data['nombre_spot'] = line_array[i+1]
-                            log_data['duracion'] = to_seconds(line_array[i+2])
-                            log_data['cod_rubro'] = line_array[i+3]
-                            log_data['cod_producto'] = line_array[i+4]
-                            log_data['cod_anunciante'] = line_array[i+5].rstrip()
+                    pos = line_array.index('MATCH')
+                    log_data['nombre_spot'] = line_array[pos+1]
+                    log_data['duracion'] = to_seconds(line_array[pos+2])
+                    log_data['cod_rubro'] = line_array[pos+3]
+                    log_data['cod_producto'] = line_array[pos+4]
+                    log_data['cod_anunciante'] = line_array[pos+5].rstrip()
                     # linea procesada en log_data
                     lista_datos.append(log_data)
     except IOError:
