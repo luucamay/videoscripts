@@ -6,7 +6,7 @@ import time
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
-        with open(archsalida, 'w+') as file:
+        with open(archsalida, 'a+') as file:
             for data in datos_from_log:
                 registro = ""
                 registro += datos_from_name['fecha_emision'] + ';'
@@ -79,6 +79,9 @@ def main():
     lista = os.listdir(sys.argv[1])
     if not lista:
         print("No hay archivos en el directorio")
+
+    fecha_registro = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+    
     for arch in lista:
         if not arch.endswith(".log"):
             continue
@@ -88,7 +91,8 @@ def main():
         if not datos_log:
             continue
         datos_name_arch = procesa_nombre_archivo(arch)
-        arch_csv = arch_log + '.csv'
+        #arch_csv = arch_log + '.csv'
+        arch_csv = 'banner_import-' + fecha_registro + '.csv'
         crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
         if crea_csv != 0:
             continue
