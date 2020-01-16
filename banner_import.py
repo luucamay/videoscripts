@@ -85,14 +85,18 @@ def main():
         print("Procesando: ", arch)
         arch_log = os.path.join(sys.argv[1], arch)
         datos_log = procesa_log(arch_log)
-        print(datos_log)
         if not datos_log:
             continue
         datos_name_arch = procesa_nombre_archivo(arch)
-        print(datos_name_arch)
         arch_csv = arch_log + '.csv'
-        create_csv(arch_csv, datos_log, datos_name_arch)
-        arch_log_imported = arch_log + '.imported'
+        crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
+        if crea_csv != 0:
+            continue
+        try:
+            os.rename(arch_log, arch_log + '.imported')
+        except:
+            print("Error al renombrar archivo", arch_log)
+        time.sleep(2)
 
 if __name__ == "__main__":
   main()
