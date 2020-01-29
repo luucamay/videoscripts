@@ -1,7 +1,7 @@
 ## videoscripts
 Un repositorio para guardar algún script en python para resolver problemas de concurrencia
 
-## Descripción general de funcionamiento del script
+## Parte 1 - Descripción general de funcionamiento del script
 
 1. Del directorio **/recibido** toma un archivo.dav
 2. Verifica si está siendo procesado (.lock) o ya ha sido procesado (.done)
@@ -15,4 +15,11 @@ Un repositorio para guardar algún script en python para resolver problemas de c
 8. Registra el error o el éxito en el archivo.log 
 9. Este archivo.log he decidido almacenarlo en el servidor que procesa el archivo
 10. Actualiza la lista de archivos
+
+## Parte 2 - Lectura de logs para generar archivos CSV
+Para esta parte utiliza el script 'banner_import.py'.
+
+Este script recibe un solo parametro que es el directorio de archivos logs que han sido generados despues de haber procesado los archivos.dav.
+
+El script primero verifica que el archivo que esta por procesar tiene la extensión '.log' y luego lo procesa para añadir un registro en una línea al archivo CSV generado por cada vez que se ejecuta el script.
 
