@@ -30,9 +30,17 @@ def format_date(str_date):
     hour = datetimeobj.strftime('%H:%M:%S')
     return date, hour
 
-def get_obs_nom(str_obs_nom, case):
-    ans = str_obs_nom.split('-')
-    return ans[case]
+def get_obs_nom(str_obs_nom):
+    ans = {'obs':'', 'name':''}
+    tmp = str_obs_nom.split('-')
+    if len(tmp) == 2:
+        ans['obs'] = tmp[0]
+        ans['name'] = tmp[1]
+    elif:
+        ans['name'] = tmp[0]
+    else:
+        print('error in observation and name')
+    return ans
 
 def procesa_nombre_archivo(string_name):
     datos_nombre = {}
@@ -58,8 +66,9 @@ def procesa_log(arch):
                 if 'MATCH' in line_set:
                     log_data = {}
                     pos = line_array.index('MATCH')
-                    log_data['nombre_spot'] = get_obs_nom(line_array[pos+1], 1)
-                    log_data['observacion'] = get_obs_nom(line_array[pos+1], 0)
+                    obs_name_dic = get_obs_nom(line_array[pos+1])
+                    log_data['nombre_spot'] = obs_name_dic['name']
+                    log_data['observacion'] = obs_name_dic['obs']
                     log_data['duracion'] = to_seconds(line_array[pos+2])
                     log_data['cod_rubro'] = line_array[pos+3]
                     log_data['cod_producto'] = line_array[pos+4]
