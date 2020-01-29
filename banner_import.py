@@ -36,7 +36,7 @@ def get_obs_nom(str_obs_nom):
     if len(tmp) == 2:
         ans['obs'] = tmp[0]
         ans['name'] = tmp[1]
-    elif:
+    elif len(tmp) == 1:
         ans['name'] = tmp[0]
     else:
         print('error in observation and name')
