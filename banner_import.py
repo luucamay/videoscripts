@@ -15,7 +15,7 @@ def create_csv(archsalida, datos_from_log, datos_from_name):
                 registro += data['cod_rubro'] + ';'
                 registro += data['cod_anunciante'] + ';'
                 registro += data['cod_producto'] + ';'
-                registro += datos_from_name['observacion'] + ';'
+                registro += data['observacion'] + ';'
                 registro += str(data['duracion']) + ';'
                 registro += datos_from_name['hora_emision'] + ';'
                 registro += data['nombre_spot'] + '\n'
@@ -30,10 +30,9 @@ def format_date(str_date):
     hour = datetimeobj.strftime('%H:%M:%S')
     return date, hour
 
-def get_obs(str_observacion):
-    obs = str_observacion.split('.')
-    obs = obs[0].split('-')
-    return obs[1]
+def get_obs_nom(str_obs_nom, case):
+    ans = str_obs_nom.split('-')
+    return ans[case]
 
 def procesa_nombre_archivo(string_name):
     datos_nombre = {}
@@ -41,7 +40,6 @@ def procesa_nombre_archivo(string_name):
     datos_nombre['cod_ciu'] = name_array[0]
     datos_nombre['cod_canal'] = name_array[1]
     datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
-    datos_nombre['observacion'] = get_obs(name_array[3])
     return datos_nombre
 
 def to_seconds(string_time):
@@ -60,7 +58,8 @@ def procesa_log(arch):
                 if 'MATCH' in line_set:
                     log_data = {}
                     pos = line_array.index('MATCH')
-                    log_data['nombre_spot'] = line_array[pos+1]
+                    log_data['nombre_spot'] = get_obs_nom(line_array[pos+1], 1)
+                    log_data['observacion'] = get_obs_nom(line_array[pos+1], 0)
                     log_data['duracion'] = to_seconds(line_array[pos+2])
                     log_data['cod_rubro'] = line_array[pos+3]
                     log_data['cod_producto'] = line_array[pos+4]
