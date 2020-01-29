@@ -29,5 +29,6 @@ Importante checar que el formato del nombre del archivo.log y del contenido dent
 Por ejemplo:
 
 BO-200_ch1_20191201060000_20191201061000-obs.DAV (correcto)
+
 BO-200_ch1_main_20200128072000_20200128073000.dav.log (incorrecto, tiene la palabra 'main antes de la fecha')
 
