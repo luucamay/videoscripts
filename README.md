@@ -26,9 +26,14 @@ El script primero verifica que el archivo que esta por procesar tiene la extensi
 ### Recomendacion
 Importante checar que el formato del nombre del archivo.log y del contenido dentro del log sea el esperado por el script.
 
-Por ejemplo:
+#### Check 1:
 
 BO-200_ch1_20191201060000_20191201061000-obs.DAV (correcto)
 
 BO-200_ch1_main_20200128072000_20200128073000.dav.log (incorrecto, tiene la palabra 'main antes de la fecha')
+
+#### Check 2:
+La cadena de observacion_nombre al hacer split debe tener 2 elementos exactamente.
+
+
 
