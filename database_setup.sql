@@ -1,1 +1,15 @@
-create table tvmencion ( cod_mencion smallint unsigned not null auto_increment, fecha_registro, fecha_emision, cod_canal, cod_ciu, cod_rubro, cod_anunciante, cod_producto, nombre_spot, duracion, hora_emision, cod_programa, observacion, constraint pk_tvmencion primary key (cod_mencion))
+CREATE TABLE IF NOT EXISTS tvmencion(
+    cod_mencion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    fecha_registro DATE,
+    fecha_emision DATE,
+    cod_canal VARCHAR(255),
+    cod_ciu VARCHAR(255),
+    cod_rubro VARCHAR(255),
+    cod_anunciante VARCHAR(255),
+    cod_producto VARCHAR(255),
+    nombre_spot VARCHAR(255),
+    duracion VARCHAR(50),
+    hora_emision TIMESTAMP,
+    cod_programa VARCHAR(255),
+    observacion VARCHAR(255)
+    );
