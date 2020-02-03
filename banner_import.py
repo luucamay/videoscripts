@@ -82,6 +82,8 @@ def procesa_log(arch):
                     log_data['cod_anunciante'] = line_array[pos+5].rstrip()
                     # linea procesada en log_data
                     lista_datos.append(log_data)
+                    print('- Registro:', log_data['nombre_spot'])
+
     except IOError:
         print("No se puede acceder al archivo", arch)
     return lista_datos
@@ -118,6 +120,7 @@ def main():
         crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
         if crea_csv != 0:
             continue
+        print('Archivo CSV generado:', arch_csv)
         try:
             os.rename(arch_log, arch_log + '.imported')
         except:
