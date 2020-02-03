@@ -23,3 +23,16 @@ CREATE TABLE `tciudad` (
 
 INSERT INTO tciudad (cod_ciu,nom_ciu)
 VALUES ('200', 'La Paz');
+
+CREATE TABLE `tvcanal` (
+  `cod_canal` int(10) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `numero` varchar(10) NOT NULL,
+  `cod_ciudad` int(10) NOT NULL,
+  `estado` int(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`cod_canal`),
+  UNIQUE KEY `ucanal` (`nombre`,`numero`,`cod_ciudad`)
+) ENGINE=MyISAM AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
+
+INSERT INTO tvcanal (cod_canal, nombre, numero, cod_ciudad)
+VALUES ('1', 'BTV', '5', '200');
