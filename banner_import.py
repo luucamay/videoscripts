@@ -106,7 +106,7 @@ def main():
         datos_name_arch = procesa_nombre_archivo(arch)
 
         # making sure none of the fields are empty strings
-        if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu' and datos_name_arch['cod_canal']]):
+        if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu'] and datos_name_arch['cod_canal']):
             print('Formato del nombre de archivo ', arch,' no es el correcto')
             continue
         
