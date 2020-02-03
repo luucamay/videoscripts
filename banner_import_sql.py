@@ -27,7 +27,39 @@ def get_canal(cod_canal):
     val = (cod_canal, )
     mycursor.execute(sql, val)
     result = mycursor.fetchone()
-    print(val, result)
     if result:
         canal = result[0]
     return canal
+
+def get_rubro(cod_rubro):
+    rubro = 'Rubro no encontrado'
+    mycursor = mydb.cursor()
+    sql = "SELECT nom_rubro FROM tvrubro WHERE cod_rubro = %s AND estado = 1"
+    val = (cod_rubro, )
+    mycursor.execute(sql, val)
+    result = mycursor.fetchone()
+    if result:
+        rubro = result[0]
+    return rubro
+
+def get_anunciante(cod_anu):
+    anunciante = 'Anunciante no encontrado'
+    mycursor = mydb.cursor()
+    sql = "SELECT anunciante FROM tvanunciante WHERE cod_anu = %s AND estado = 1"
+    val = (cod_anu, )
+    mycursor.execute(sql, val)
+    result = mycursor.fetchone()
+    if result:
+        anunciante = result[0]
+    return anunciante
+
+def get_producto(cod_anu, cod_rubro, cod_prod):
+    producto = 'Producto no encontrado'
+    mycursor = mydb.cursor()
+    sql = "SELECT nombre FROM tvproducto WHERE cod_anu = %s AND cod_rubro = %s AND cod_producto = %s AND estado = 1"
+    val = (cod_anu, cod_rubro, cod_prod,)
+    mycursor.execute(sql, val)
+    result = mycursor.fetchone()
+    if result:
+        producto = result[0]
+    return producto

@@ -3,7 +3,7 @@ import os
 import sys
 import datetime
 import time
-from banner_import_sql import get_ciudad, get_canal
+from banner_import_sql import get_ciudad, get_canal, get_rubro, get_producto, get_anunciante
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
@@ -78,9 +78,12 @@ def procesa_log(arch):
                     log_data['nombre_spot'] = obs_name_dic['name']
                     log_data['observacion'] = obs_name_dic['obs']
                     log_data['duracion'] = to_seconds(line_array[pos+2])
-                    log_data['cod_rubro'] = line_array[pos+3]
-                    log_data['cod_producto'] = line_array[pos+4]
-                    log_data['cod_anunciante'] = line_array[pos+5].rstrip()
+                    cod_rubro = line_array[pos+3][1:]
+                    cod_producto = line_array[pos+4][1:]
+                    cod_anu = line_array[pos+5].rstrip()[1:]
+                    log_data['cod_rubro'] = get_rubro(cod_rubro)
+                    log_data['cod_anunciante'] = get_anunciante(cod_anu)
+                    log_data['cod_producto'] = get_producto(cod_anu, cod_rubro, cod_producto)
                     # linea procesada en log_data
                     lista_datos.append(log_data)
                     print('- Registro:', log_data['nombre_spot'])
