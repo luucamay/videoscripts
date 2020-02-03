@@ -25,9 +25,13 @@ def create_csv(archsalida, datos_from_log, datos_from_name):
     return 0
 
 def format_date(str_date):
-    datetimeobj = datetime.datetime.strptime(str_date, '%Y%m%d%H%M%S')
-    date = datetimeobj.strftime('%d/%m/%Y')
-    hour = datetimeobj.strftime('%H:%M:%S')
+    date = hour = ''
+    try:
+        datetimeobj = datetime.datetime.strptime(str_date, '%Y%m%d%H%M%S')
+        date = datetimeobj.strftime('%d/%m/%Y')
+        hour = datetimeobj.strftime('%H:%M:%S')
+    except ValueError:
+        print ("'", str_date, "' no es una fecha")
     return date, hour
 
 def get_obs_nom(str_obs_nom):
@@ -43,8 +47,11 @@ def get_obs_nom(str_obs_nom):
     return ans
 
 def procesa_nombre_archivo(string_name):
+    # BO-200_ch1_20200128072000_20200128073000.dav.log
     datos_nombre = {}
     name_array = string_name.split('_')
+    if len(name_array) != 4:
+        return datos_nombre
     datos_nombre['cod_ciu'] = name_array[0]
     datos_nombre['cod_canal'] = name_array[1]
     datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
@@ -95,10 +102,17 @@ def main():
             continue
         print("Procesando: ", arch)
         arch_log = os.path.join(sys.argv[1], arch)
+        
+        datos_name_arch = procesa_nombre_archivo(arch)
+
+        # making sure none of the fields are empty strings
+        if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu' and datos_name_arch['cod_canal']]):
+            print('Formato del nombre de archivo ', arch,' no es el correcto')
+            continue
+        
         datos_log = procesa_log(arch_log)
         if not datos_log:
             continue
-        datos_name_arch = procesa_nombre_archivo(arch)
         #arch_csv = arch_log + '.csv'
         arch_csv = 'banner_import-' + fecha_registro + '.csv'
         crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
