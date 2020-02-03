@@ -3,6 +3,7 @@ import os
 import sys
 import datetime
 import time
+from banner_import_sql import get_ciudad
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
@@ -52,7 +53,7 @@ def procesa_nombre_archivo(string_name):
     name_array = string_name.split('_')
     if len(name_array) != 4:
         return datos_nombre
-    datos_nombre['cod_ciu'] = name_array[0]
+    datos_nombre['cod_ciu'] =  get_ciudad(name_array[0])
     datos_nombre['cod_canal'] = name_array[1]
     datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
     return datos_nombre
@@ -107,7 +108,7 @@ def main():
         
         datos_name_arch = procesa_nombre_archivo(arch)
 
-        # making sure none of the fields are empty strings
+        # making sure none of the fields are empty strings from the name of the file
         if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu'] and datos_name_arch['cod_canal']):
             print('Formato del nombre de archivo ', arch,' no es el correcto')
             continue
@@ -115,7 +116,7 @@ def main():
         datos_log = procesa_log(arch_log)
         if not datos_log:
             continue
-        #arch_csv = arch_log + '.csv'
+        
         arch_csv = 'banner_import-' + fecha_registro + '.csv'
         crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
         if crea_csv != 0:
