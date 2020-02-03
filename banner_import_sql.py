@@ -14,14 +14,20 @@ def get_ciudad(cod_ciu):
     sql = "SELECT nom_ciu FROM tciudad WHERE cod_ciu = %s"
     val = (cod_ciu, )
     mycursor.execute(sql, val)
-    result = mycursor.fetchone()[0]
+    result = mycursor.fetchone()
     if result:
-        ciudad = result
+        ciudad = result[0]
     return ciudad
 
 def get_canal(cod_canal):
+    cod_canal = cod_canal[2:]
     canal = ''
     mycursor = mydb.cursor()
-    mycursor.execute("SELECT nombre FROM tvcanal")
-    canal = mycursor.fetchone()[0]
+    sql = "SELECT nombre FROM tvcanal WHERE cod_canal = %s"
+    val = (cod_canal, )
+    mycursor.execute(sql, val)
+    result = mycursor.fetchone()
+    print(val, result)
+    if result:
+        canal = result[0]
     return canal

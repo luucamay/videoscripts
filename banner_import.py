@@ -3,7 +3,7 @@ import os
 import sys
 import datetime
 import time
-from banner_import_sql import get_ciudad
+from banner_import_sql import get_ciudad, get_canal
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
@@ -54,7 +54,7 @@ def procesa_nombre_archivo(string_name):
     if len(name_array) != 4:
         return datos_nombre
     datos_nombre['cod_ciu'] =  get_ciudad(name_array[0])
-    datos_nombre['cod_canal'] = name_array[1]
+    datos_nombre['cod_canal'] = get_canal(name_array[1])
     datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
     return datos_nombre
 
