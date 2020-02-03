@@ -16,7 +16,7 @@ Un repositorio para guardar algún script en python para resolver problemas de c
 9. Este archivo.log he decidido almacenarlo en el servidor que procesa el archivo
 10. Actualiza la lista de archivos
 
-## Parte 2 - Lectura de logs para generar archivos CSV
+## Parte 2 - Lectura de logs para generar archivos CSV con conexion a mysql
 Para esta parte utiliza el script 'banner_import.py'.
 
 Este script recibe un solo parametro que es el directorio de archivos logs que han sido generados despues de haber procesado los archivos.dav.
@@ -26,14 +26,22 @@ El script primero verifica que el archivo que esta por procesar tiene la extensi
 ### Recomendacion
 Importante checar que el formato del nombre del archivo.log y del contenido dentro del log sea el esperado por el script.
 
-#### Check 1:
+### Requerimientos
+Instala **mysql-connector**
 
-BO-200_ch1_20191201060000_20191201061000-obs.DAV (correcto)
+```
+pip3 install mysql-connector
+```
 
-BO-200_ch1_main_20200128072000_20200128073000.dav.log (incorrecto, tiene la palabra 'main antes de la fecha')
+### Como funciona
+Descarga los archivos:
+- 'banner_import.py'
+- 'banner_import_sql.py'
 
-#### Check 2:
-La cadena de observacion_nombre al hacer split debe tener 2 elementos exactamente.
+Ambos archivos deben estar en el mismo directorio.
 
+Para ejecutar el script utiliza el siguiente comando:
 
-
+```
+python3 banner_import.py 'DIRECTORIO DE ARCHIVOS LOG'
+```
