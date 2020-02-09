@@ -22,7 +22,7 @@ def close_connection(mydb):
 
 def get_ciudad(cod_ciu, mydb):
     cod_ciu = cod_ciu.split('-')[1]
-    ciudad = ''
+    ciudad = 'Ciudad no encontrada'
     mycursor = mydb.cursor()
     sql = "SELECT nom_ciu FROM tciudad WHERE cod_ciu = %s"
     val = (cod_ciu, )
@@ -35,7 +35,7 @@ def get_ciudad(cod_ciu, mydb):
 
 def get_canal(cod_canal, mydb):
     cod_canal = cod_canal[2:]
-    canal = ''
+    canal = 'Canal no encontrado'
     mycursor = mydb.cursor()
     sql = "SELECT nombre FROM tvcanal WHERE cod_canal = %s"
     val = (cod_canal, )
