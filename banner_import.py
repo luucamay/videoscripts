@@ -3,7 +3,7 @@ import os
 import sys
 import datetime
 import time
-from banner_import_sql import get_ciudad, get_canal, get_rubro, get_producto, get_anunciante
+from banner_import_sql import *
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
@@ -47,14 +47,14 @@ def get_obs_nom(str_obs_nom):
         print('error in observation and name')
     return ans
 
-def procesa_nombre_archivo(string_name):
+def procesa_nombre_archivo(string_name, conexion):
     # BO-200_ch1_20200128072000_20200128073000.dav.log
     datos_nombre = {}
     name_array = string_name.split('_')
     if len(name_array) != 4:
         return datos_nombre
-    datos_nombre['cod_ciu'] =  get_ciudad(name_array[0])
-    datos_nombre['cod_canal'] = get_canal(name_array[1])
+    datos_nombre['cod_ciu'] =  get_ciudad(name_array[0], conexion)
+    datos_nombre['cod_canal'] = get_canal(name_array[1], conexion)
     datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
     return datos_nombre
 
@@ -64,7 +64,7 @@ def to_seconds(string_time):
     total_sec = datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
     return int(total_sec)
 
-def procesa_log(arch):
+def procesa_log(arch, conexion):
     lista_datos = []
     try:
         with open(arch) as file:
@@ -81,9 +81,9 @@ def procesa_log(arch):
                     cod_rubro = line_array[pos+3][1:]
                     cod_producto = line_array[pos+4][1:]
                     cod_anu = line_array[pos+5].rstrip()[1:]
-                    log_data['cod_rubro'] = get_rubro(cod_rubro)
-                    log_data['cod_anunciante'] = get_anunciante(cod_anu)
-                    log_data['cod_producto'] = get_producto(cod_anu, cod_rubro, cod_producto)
+                    log_data['cod_rubro'] = get_rubro(cod_rubro, conexion)
+                    log_data['cod_anunciante'] = get_anunciante(cod_anu, conexion)
+                    log_data['cod_producto'] = get_producto(cod_anu, cod_rubro, cod_producto, conexion)
                     # linea procesada en log_data
                     lista_datos.append(log_data)
                     print('- Registro:', log_data['nombre_spot'])
@@ -109,16 +109,21 @@ def main():
         print("Procesando: ", arch)
         arch_log = os.path.join(sys.argv[1], arch)
         
-        datos_name_arch = procesa_nombre_archivo(arch)
+        conexion = connect_db()
+        if not conexion:
+            continue
+        datos_name_arch = procesa_nombre_archivo(arch, conexion)
 
         # making sure none of the fields are empty strings from the name of the file
         if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu'] and datos_name_arch['cod_canal']):
             print('Formato del nombre de archivo ', arch,' no es el correcto')
             continue
         
-        datos_log = procesa_log(arch_log)
+        datos_log = procesa_log(arch_log, conexion)
         if not datos_log:
             continue
+        
+        close_connection(conexion)
         
         arch_csv = 'banner_import-' + fecha_registro + '.csv'
         crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
