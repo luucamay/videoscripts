@@ -122,6 +122,7 @@ def main():
         
         datos_log = procesa_log(arch_log, conexion)
         if not datos_log:
+            close_connection(conexion)
             continue
         
         close_connection(conexion)
