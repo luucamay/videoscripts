@@ -121,17 +121,16 @@ def main():
             continue
         
         datos_log = procesa_log(arch_log, conexion)
-        if not datos_log:
-            close_connection(conexion)
-            continue
-        
+        if datos_log:
+            arch_csv = 'banner_import-' + fecha_registro + '.csv'
+            crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
+            if crea_csv == 0:
+                print('Archivo CSV generado:', arch_csv)
+            else:
+                close_connection(conexion)  
+                print('No se pudo escribir en el archivo CSV', arch_csv)      
+                continue        
         close_connection(conexion)
-        
-        arch_csv = 'banner_import-' + fecha_registro + '.csv'
-        crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
-        if crea_csv != 0:
-            continue
-        print('Archivo CSV generado:', arch_csv)
         try:
             os.rename(arch_log, arch_log + '.imported')
         except:
