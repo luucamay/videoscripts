@@ -1,7 +1,8 @@
-## videoscripts
+# Videoscripts
 Un repositorio para guardar algún script en python para resolver problemas de concurrencia
 
-## Parte 1 - Descripción general de funcionamiento del script
+## Procesar videos (scanea_videos.py)
+Para esta parte utiliza el script 'scanea_videos.py'.
 
 1. Del directorio **/recibido** toma un archivo.dav
 2. Verifica si está siendo procesado (.lock) o ya ha sido procesado (.done)
@@ -16,7 +17,7 @@ Un repositorio para guardar algún script en python para resolver problemas de c
 9. Este archivo.log he decidido almacenarlo en el servidor que procesa el archivo
 10. Actualiza la lista de archivos
 
-## Parte 2 - Lectura de logs para generar archivos CSV con conexion a mysql
+## Procesar logs para generar archivos CSV (banner_import_py)
 Para esta parte utiliza el script 'banner_import.py'.
 
 Este script recibe un solo parametro que es el directorio de archivos logs que han sido generados despues de haber procesado los archivos.dav.
