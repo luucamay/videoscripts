@@ -3,13 +3,20 @@ import os
 import sys
 import datetime
 import time
+import logging
 from banner_import_sql import *
+
+logging.basicConfig(level=logging.INFO)
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
         with open(archsalida, 'a+') as file:
+            header = 'N;FECHA DE EMISION;MEDIO;CIUDAD;RUBRO;ANUNCIANTE;PRODUCTO;OBSERVACION;DURACION SEG.;HORA EMISION;NOMBRE' + '\n'
+            file.write(header)
+
             for data in datos_from_log:
                 registro = ""
+                registro += '1' + ';'
                 registro += datos_from_name['fecha_emision'] + ';'
                 registro += datos_from_name['cod_canal'] + ';'
                 registro += datos_from_name['cod_ciu'] + ';'
@@ -86,7 +93,7 @@ def procesa_log(arch, conexion):
                     log_data['cod_producto'] = get_producto(cod_anu, cod_rubro, cod_producto, conexion)
                     # linea procesada en log_data
                     lista_datos.append(log_data)
-                    print('- Registro:', log_data['nombre_spot'])
+                    logging.debug('- Registro: %s', log_data['nombre_spot'])
 
     except IOError:
         print("No se puede acceder al archivo", arch)
