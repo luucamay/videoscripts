@@ -7,16 +7,21 @@ import logging
 from banner_import_sql import *
 
 logging.basicConfig(level=logging.INFO)
+csv_row_number = 0
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
     try:
         with open(archsalida, 'a+') as file:
-            header = 'N;FECHA DE EMISION;MEDIO;CIUDAD;RUBRO;ANUNCIANTE;PRODUCTO;OBSERVACION;DURACION SEG.;HORA EMISION;NOMBRE' + '\n'
-            file.write(header)
+            # if no rows have been written in the csv
+            global csv_row_number
+            if csv_row_number == 0 :
+                header = 'N;FECHA DE EMISION;MEDIO;CIUDAD;RUBRO;ANUNCIANTE;PRODUCTO;OBSERVACION;DURACION SEG.;HORA EMISION;NOMBRE' + '\n'
+                file.write(header)
 
             for data in datos_from_log:
+                csv_row_number += 1
                 registro = ""
-                registro += '1' + ';'
+                registro += str(csv_row_number) + ';'
                 registro += datos_from_name['fecha_emision'] + ';'
                 registro += datos_from_name['cod_canal'] + ';'
                 registro += datos_from_name['cod_ciu'] + ';'
