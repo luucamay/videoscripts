@@ -6,9 +6,9 @@ import shutil
 import time
 import fcntl
 import errno
+from banner_import import *
 
-videotool='/bin/true'
-videotool='scanpatvid'
+videotool='./scanpatvid'
 maxtime=7200
 
 def fn(comando, dirpat, archdav, archsalida):
@@ -34,6 +34,7 @@ def main():
 		print("Modo de empleo:")
 		print(sys.argv[0] + " DIR_PATRONES DIR_VIDEOS_DAV DIR_VIDEOS_PROCESADOS")
 		return
+
 	lista = os.listdir(sys.argv[2])
 	if not lista:
 		print("No hay archivos en el directorio")
@@ -74,6 +75,10 @@ def main():
 			shutil.move(ruta_dav_recibido + ".done", ruta_dav_procesado + ".done")
 			shutil.move(ruta_dav_recibido + ".log", ruta_dav_procesado + ".log")
 			shutil.move(ruta_dav_recibido, ruta_dav_procesado)
+
+			# Generar archivo CSV
+			procesa_log_file(ruta_dav_procesado + ".log")
+
 			lista_png = os.listdir(".")
 			for arch_png in lista_png:	
 				if arch_png.endswith(".png"):
