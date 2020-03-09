@@ -6,7 +6,8 @@ import time
 import logging
 from banner_import_sql import *
 
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 csv_row_number = 0
 
 def create_csv(archsalida, datos_from_log, datos_from_name):
@@ -60,14 +61,14 @@ def get_obs_nom(str_obs_nom):
     return ans
 
 def procesa_nombre_archivo(string_name, conexion):
-    # BO-200_ch1_20200128072000_20200128073000.dav.log
+    # BO-200_ch1_main_20200128072000_20200128073000.dav.log
     datos_nombre = {}
     name_array = string_name.split('_')
-    if len(name_array) != 4:
+    if len(name_array) != 5:
         return datos_nombre
     datos_nombre['cod_ciu'] =  get_ciudad(name_array[0], conexion)
     datos_nombre['cod_canal'] = get_canal(name_array[1], conexion)
-    datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[2])
+    datos_nombre['fecha_emision'], datos_nombre['hora_emision'] = format_date(name_array[3])
     return datos_nombre
 
 def to_seconds(string_time):
@@ -76,7 +77,7 @@ def to_seconds(string_time):
     total_sec = datetime.timedelta(hours=x.tm_hour, minutes=x.tm_min, seconds=x.tm_sec).total_seconds()
     return int(total_sec)
 
-def procesa_log(arch, conexion):
+def procesa_log_data(arch, conexion):
     lista_datos = []
     try:
         with open(arch) as file:
@@ -104,50 +105,61 @@ def procesa_log(arch, conexion):
         print("No se puede acceder al archivo", arch)
     return lista_datos
 
+def procesa_log_file(arch_log):
+    """
+    Toma un archivo .log generado por scanpatvid y procesa su contenido
+    El resultado del proceso se escribe en un archivo CSV.
+    """
+    logging.debug('Procesando log: %s', arch_log)
+
+    conexion = connect_db()
+    if not conexion:
+        return
+    datos_name_arch = procesa_nombre_archivo(arch_log, conexion)
+
+    # making sure none of the fields are empty strings from the name of the file
+    if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu'] and datos_name_arch['cod_canal']):
+        print('Formato del nombre de archivo ', arch,' no es el correcto')
+        close_connection(conexion)
+        return
+    
+    datos_log = procesa_log_data(arch_log, conexion)
+    if datos_log:
+        # The filename ends with '.dav.log', eight characters
+        arch_csv = arch_log[0:len(arch_log)-8] + '.csv'
+        crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
+        if crea_csv == 0:
+            print('Archivo CSV generado:', arch_csv)
+        else:
+            close_connection(conexion)  
+            print('No se pudo escribir en el archivo CSV', arch_csv)      
+            return
+
+    close_connection(conexion)
+    try:
+        os.rename(arch_log, arch_log + '.imported')
+    except:
+        print("Error al renombrar archivo", arch_log)
+
 def main():
+    """
+    Cuando se invoca el script directamente, se procesa
+    varios archivos .log en un directorio
+    """
     if len(sys.argv) != 2:
         print("Modo de empleo:")
         print(sys.argv[0] + " DIR_DAV_LOGS")
         return
     lista = os.listdir(sys.argv[1])
     if not lista:
-        print("No hay archivos en el directorio")
+        print("No hay archivos .log en el directorio")
 
-    fecha_registro = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
-    
     for arch in lista:
         if not arch.endswith(".log"):
             continue
-        print("Procesando: ", arch)
-        arch_log = os.path.join(sys.argv[1], arch)
-        
-        conexion = connect_db()
-        if not conexion:
-            continue
-        datos_name_arch = procesa_nombre_archivo(arch, conexion)
 
-        # making sure none of the fields are empty strings from the name of the file
-        if not (datos_name_arch and datos_name_arch['fecha_emision'] and datos_name_arch['hora_emision'] and datos_name_arch['cod_ciu'] and datos_name_arch['cod_canal']):
-            print('Formato del nombre de archivo ', arch,' no es el correcto')
-            close_connection(conexion)
-            continue
-        
-        datos_log = procesa_log(arch_log, conexion)
-        if datos_log:
-            arch_csv = 'banner_import-' + fecha_registro + '.csv'
-            crea_csv = create_csv(arch_csv, datos_log, datos_name_arch)
-            if crea_csv == 0:
-                print('Archivo CSV generado:', arch_csv)
-            else:
-                close_connection(conexion)  
-                print('No se pudo escribir en el archivo CSV', arch_csv)      
-                continue        
-        close_connection(conexion)
-        try:
-            os.rename(arch_log, arch_log + '.imported')
-        except:
-            print("Error al renombrar archivo", arch_log)
-        time.sleep(2)
+        arch_log = os.path.join(sys.argv[1], arch)
+        procesa_log_file(arch_log)
 
 if __name__ == "__main__":
   main()
