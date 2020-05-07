@@ -10,11 +10,11 @@ def connect_db():
     connection = None
     try:
         connection = mysql.connector.connect(
-            host="192.168.0.1",
-            user="lupepython",
-            passwd="Petazuku@mcb2030",
-            #database="imctest"
-            database="imc"
+            host="localhost",
+            user="usertest",
+            passwd="Th1s1s4P4ss!",
+            database="videos"
+            #database="imc"
         )
         logging.debug("MySQL conexion abierta")
     except Error as e:
@@ -29,7 +29,7 @@ def get_ciudad(cod_ciu, mydb):
     cod_ciu = cod_ciu.split('-')[1]
     ciudad = 'Ciudad no encontrada'
     mycursor = mydb.cursor()
-    sql = "SELECT nom_ciu FROM tciudad WHERE monitec_id = %s"
+    sql = "SELECT nom_ciu FROM tciudad WHERE cod_ciu = %s"
     logging.debug('Query: %s', sql)   
     val = (cod_ciu, )
     mycursor.execute(sql, val)
